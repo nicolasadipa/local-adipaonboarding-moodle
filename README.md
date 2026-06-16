@@ -2,7 +2,7 @@
 
 **Tours guiados para estudiantes del aula ADIPA.** Plugin Moodle 4.x type `local` que muestra recorridos interactivos (Driver.js) la primera vez que un estudiante entra a un curso o al viewer de cápsulas de video. Pensado para que el alumno descubra las features del aula sin necesidad de que alguien le explique a mano.
 
-> **Estado**: v1.0.3 — **ALPHA estable**. Validado en staging + producción acotada. Apto para rollout gradual.
+> **Estado**: v1.0.4 — **ALPHA estable**. Validado en staging + producción acotada. Apto para rollout gradual.
 
 ---
 
@@ -277,6 +277,7 @@ El patch fuerza al bundle a tomar el branch global (`window.Sortable = e()`) en 
 
 | Versión | Fecha | Highlights |
 |---------|-------|------------|
+| **1.0.4** | 2026-06-16 | CSS-only: breakpoint del trigger (?) banner alineado al de format_adipa (700px en lugar de 575px) — entre 576–700px el banner colapsa pero el icono quedaba con tamaño desktop. |
 | **1.0.3** | 2026-06-16 | Trigger banner: 22×22 top-right (más sutil, ya no choca con caja sesiones). Telemetría: fix discrepancia cards vs tabla (era `get_records_sql` con keys colisionando — ahora `get_recordset_sql`). Runner: nueva señal de "completed" via `onPopoverRender` del último step (más confiable que `hasNextStep()`). +1 test PHPUnit corregido para multi-coursetype. |
 | **1.0.2** | 2026-06-16 | Responsive: skip steps con target oculto en mobile (video_sidebar off-canvas, video_progress display:none) + placement por breakpoint en todos los steps. Trigger video: link sutil debajo del Tip de apuntes (no encima). Trigger banner: icono compacto top-right con contraste por programa (blanco/navy). Scroll-into-view antes de cada highlight (fix nid_row). Charts telemetría con wrap altura fija. |
 | **1.0.1** | 2026-06-15 | Cleanup batch: helper admin_page_setup, cache buster en bundles UMD, drop `default_test_course_id`. |

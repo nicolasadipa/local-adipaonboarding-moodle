@@ -123,14 +123,19 @@
     line-height: 1;
 }
 
-@media (max-width: 575px) {
+/* Banner format_adipa colapsa a 1 columna en max-width: 700px (no 575).
+ * El trigger debe escalar junto con el banner para no quedar oversize. */
+@media (max-width: 700px) {
     .adipa-onboarding-trigger {
         width: 20px;
         height: 20px;
         font-size: 10px;
         top: 8px;
         right: 8px;
+        border-width: 1px;
     }
+}
+@media (max-width: 575px) {
     .adipa-onboarding-trigger-link {
         font-size: 11px;
         gap: 5px;

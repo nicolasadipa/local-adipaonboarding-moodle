@@ -250,5 +250,10 @@ function xmldb_local_adipaonboarding_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026061914, 'local', 'adipaonboarding');
     }
 
+    if ($oldversion < 2026061915) {
+        // v1.0.4: CSS-only — breakpoint trigger (?) banner alineado a 700px de format_adipa.
+        upgrade_plugin_savepoint(true, 2026061915, 'local', 'adipaonboarding');
+    }
+
     return true;
 }
