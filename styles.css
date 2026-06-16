@@ -6,49 +6,68 @@
  * Touch target minimo: 44x44 (Apple HIG / WCAG 2.5.5).
  */
 
-/* === Trigger "?" — UN solo estilo: icono circular === */
+/* === Trigger "?" — course_view: icono circular DENTRO del banner.
+ *
+ * El banner usa `var(--banner-bg)` con colores que cambian por programa.
+ * Defaults oscuros (purple/cyan): texto blanco con fondo blanco transparente.
+ * Programas con banner claro (acreditaciones/especializaciones): texto navy.
+ * Posicionado top-right para no competir con titulo/CTA del banner.
+ */
 .adipa-onboarding-trigger {
-    position: relative;
+    position: absolute;
+    top: 10px;
+    right: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: 0 8px;
+    width: 22px;
+    height: 22px;
     padding: 0;
-    background: rgba(112, 78, 253, 0.06);
-    color: #704EFD;
-    border: 1.5px solid #704EFD;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.42);
     border-radius: 50%;
     cursor: pointer;
     font-family: 'Poppins', 'Helvetica', sans-serif;
-    font-size: 16px;
+    font-size: 11px;
     font-weight: 700;
     line-height: 1;
-    vertical-align: middle;
-    flex-shrink: 0;
+    z-index: 2;
     transition: background 120ms ease, transform 120ms ease;
 }
 .adipa-onboarding-trigger:hover {
-    background: rgba(112, 78, 253, 0.18);
+    background: rgba(255, 255, 255, 0.30);
     transform: translateY(-1px);
 }
 .adipa-onboarding-trigger:focus-visible {
-    outline: 3px solid #2CB7FF;
+    outline: 2px solid #2CB7FF;
     outline-offset: 2px;
+}
+
+/* Programas con banner claro (titulos navy) → boton navy sobre fondo navy
+ * transparente. Hereda del cohort wrapper que format_adipa emite. */
+.program-adipa-acreditaciones .adipa-onboarding-trigger,
+.program-adipa-especializaciones .adipa-onboarding-trigger {
+    background: rgba(9, 30, 66, 0.10);
+    color: #091E42;
+    border-color: rgba(9, 30, 66, 0.38);
+}
+.program-adipa-acreditaciones .adipa-onboarding-trigger:hover,
+.program-adipa-especializaciones .adipa-onboarding-trigger:hover {
+    background: rgba(9, 30, 66, 0.20);
 }
 
 /* Tooltip CSS puro (usa aria-label). */
 .adipa-onboarding-trigger--icon::after {
     content: attr(aria-label);
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 6px);
     right: 0;
     background: #091E42;
     color: #fff;
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     white-space: nowrap;
     opacity: 0;
@@ -61,50 +80,68 @@
     opacity: 1;
 }
 
-/* === Wrap "tip" para mod_adipavideo (icono + texto al costado) === */
-.adipa-onboarding-trigger-wrap {
+/* === Link sutil para mod_adipavideo (debajo del Tip de apuntes) ===
+ *
+ * Sin fondo ni borde: se siente parte del flujo del panel, no un CTA dominante.
+ * Icono `?` chico en circle outline + texto en color muted.
+ */
+.adipa-onboarding-trigger-link {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin: 16px 0;
-    padding: 12px 16px;
-    background: rgba(112, 78, 253, 0.06);
-    border: 1px solid rgba(112, 78, 253, 0.18);
-    border-radius: 12px;
+    gap: 6px;
+    margin: 8px 0 0;
+    padding: 4px 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
     font-family: 'Poppins', 'Helvetica', sans-serif;
-    font-size: 13px;
-    color: #091E42;
-}
-.adipa-onboarding-trigger-wrap .adipa-onboarding-trigger {
-    margin: 0;
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-}
-.adipa-onboarding-trigger-wrap .adipa-onboarding-trigger::after {
-    display: none; /* tooltip redundante cuando ya hay texto al lado */
-}
-.adipa-onboarding-trigger__tip-text {
+    font-size: 12px;
     font-weight: 500;
+    color: #704EFD;
+    text-decoration: none;
+}
+.adipa-onboarding-trigger-link:hover,
+.adipa-onboarding-trigger-link:focus-visible {
+    color: #091E42;
+    text-decoration: underline;
+}
+.adipa-onboarding-trigger-link:focus-visible {
+    outline: 2px solid #2CB7FF;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+.adipa-onboarding-trigger-link__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
 }
 
 @media (max-width: 575px) {
     .adipa-onboarding-trigger {
-        width: 32px;
-        height: 32px;
-        margin: 0 4px;
-        font-size: 14px;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+        top: 8px;
+        right: 8px;
     }
-    .adipa-onboarding-trigger-wrap {
-        font-size: 12px;
-        padding: 10px 12px;
-        gap: 8px;
+    .adipa-onboarding-trigger-link {
+        font-size: 11px;
+        gap: 5px;
     }
 }
 
-/* Lock body scroll mientras corre el tour. */
+/* Marker class del tour activo. NO bloquea overflow porque Driver.js usa
+ * disableActiveInteraction y necesitamos que scrollIntoView funcione para
+ * steps cuyo target esta fuera del viewport (nid_row, certification). */
 body.adipa-tour-active {
-    overflow: hidden !important;
+    /* hook libre para futuras tweaks (sin lock de scroll). */
 }
 
 /* === Driver.js popover (branding ADIPA) === */
@@ -350,6 +387,16 @@ body.adipa-tour-active {
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+/* Wrap requerido por Chart.js v4 con maintainAspectRatio:false. */
+.adipa-telemetry .adipa-chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    margin-top: 8px;
+}
+@media (max-width: 575px) {
+    .adipa-telemetry .adipa-chart-wrap { height: 180px; }
+}
 
 /* === Selector tester (admin testing live) === */
 .adipa-selector-tester-banner {
@@ -470,7 +517,7 @@ body.adipa-preview-active {
 /* === Print: ocultar tour UI === */
 @media print {
     .adipa-onboarding-trigger,
-    .adipa-onboarding-trigger-wrap,
+    .adipa-onboarding-trigger-link,
     .driver-popover,
     .driver-overlay,
     .adipa-selector-tester-banner,

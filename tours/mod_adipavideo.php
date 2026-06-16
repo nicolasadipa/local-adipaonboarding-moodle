@@ -22,7 +22,10 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_sidebar_title',
                 'body_lang_key'  => 'video_step_sidebar_body',
                 'placement'      => 'right',
-                'responsive'     => ['mobile' => ['placement' => 'bottom']],
+                // En mobile (<1025px) la sidebar es off-canvas (transform translateX 100%):
+                // existe en DOM pero esta fuera del viewport. Skipeamos para no destacar
+                // un elemento invisible. El learner accede via boton "Ver clases".
+                'responsive'     => ['mobile' => ['skip' => true]],
             ],
             [
                 'step_key'       => 'video_player',
@@ -30,7 +33,7 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_player_title',
                 'body_lang_key'  => 'video_step_player_body',
                 'placement'      => 'bottom',
-                'responsive'     => [],
+                'responsive'     => ['mobile' => ['placement' => 'bottom']],
             ],
             [
                 'step_key'       => 'video_tabs',
@@ -38,7 +41,7 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_tabs_title',
                 'body_lang_key'  => 'video_step_tabs_body',
                 'placement'      => 'top',
-                'responsive'     => [],
+                'responsive'     => ['mobile' => ['placement' => 'bottom']],
             ],
             [
                 'step_key'       => 'video_notes',
@@ -47,7 +50,7 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_notes_title',
                 'body_lang_key'  => 'video_step_notes_body',
                 'placement'      => 'top',
-                'responsive'     => [],
+                'responsive'     => ['mobile' => ['placement' => 'bottom']],
                 'actions'        => [
                     ['type' => 'click', 'selector' => '.adv-tab-btn[data-tab="apuntes"]'],
                     ['type' => 'wait',  'ms' => 200],
@@ -59,7 +62,7 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_transcript_title',
                 'body_lang_key'  => 'video_step_transcript_body',
                 'placement'      => 'top',
-                'responsive'     => [],
+                'responsive'     => ['mobile' => ['placement' => 'bottom']],
                 'actions'        => [
                     ['type' => 'click', 'selector' => '.adv-tab-btn[data-tab="transcript"]'],
                     ['type' => 'wait',  'ms' => 200],
@@ -71,7 +74,7 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_palette_title',
                 'body_lang_key'  => 'video_step_palette_body',
                 'placement'      => 'bottom',
-                'responsive'     => [],
+                'responsive'     => ['mobile' => ['placement' => 'bottom']],
             ],
             [
                 'step_key'       => 'video_progress',
@@ -79,7 +82,9 @@ function local_adipaonboarding_mod_adipavideo_seeds(): array {
                 'title_lang_key' => 'video_step_progress_title',
                 'body_lang_key'  => 'video_step_progress_body',
                 'placement'      => 'bottom',
-                'responsive'     => [],
+                // En mobile (<=720px) `.adv-topbar__progress` es display:none y
+                // `.adv-progress-bar` (su hijo) tambien queda oculto. Skipeamos.
+                'responsive'     => ['mobile' => ['skip' => true]],
             ],
             [
                 'step_key'       => 'video_closing',

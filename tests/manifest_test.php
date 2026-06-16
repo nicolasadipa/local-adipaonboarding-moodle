@@ -182,8 +182,9 @@ class manifest_test extends \advanced_testcase {
         $this->assertNotNull($m);
         $stepsbefore = count($m->steps);
 
-        // Mutar y resetear.
-        $tour = $DB->get_record('local_adipaonboarding_tours', ['scope' => 'course_view']);
+        // Mutar y resetear el tour 'course' especifico (scope course_view tiene 7 tours,
+        // uno por course_type — filtrar por coursetype evita "more than one record").
+        $tour = $DB->get_record('local_adipaonboarding_tours', ['scope' => 'course_view', 'coursetype' => 'course']);
         tour_repository::replace_steps((int)$tour->id, []);
         $empty = tour_repository::build_manifest_for('course_view', 'course');
         $this->assertNull($empty); // sin steps, devuelve null
@@ -199,7 +200,7 @@ class manifest_test extends \advanced_testcase {
         $this->resetAfterTest();
         seeder::run();
         global $DB;
-        $tour = $DB->get_record('local_adipaonboarding_tours', ['scope' => 'course_view']);
+        $tour = $DB->get_record('local_adipaonboarding_tours', ['scope' => 'course_view', 'coursetype' => 'course']);
         $ts = $DB->get_record_sql(
             'SELECT id FROM {local_adipaonboarding_tsteps} WHERE tourid = ? ORDER BY sortorder ASC LIMIT 1',
             [$tour->id]

@@ -1,11 +1,14 @@
 // local_adipaonboarding/trigger — boton "?" para relanzar el tour.
 //
-// 1 host por scope, sin cascada ni fallback:
-//   - course_view    : icono "?" circular dentro de `.adipa-s0-banner`.
-//   - mod_adipavideo : tip wrap "?  ¿Como usar el aula?" despues de `.adv-tabs`.
+// 1 host por scope:
+//   - course_view    : icono "?" circular dentro de `.adipa-s0-banner` (compacto,
+//                      con color adaptado al brillo del banner via CSS).
+//   - mod_adipavideo : link sutil "? Como usar mi aula" insertado DESPUES del
+//                      hint "Tip: haz click..." (.adv-notes__help). Si ese host
+//                      no existe (capsula sin panel apuntes activo), fallback a
+//                      despues de `.adv-tabs`.
 //
-// Si el host no existe, NO se renderiza el boton (es un caso edge poco probable
-// con format_adipa + mod_adipavideo correctamente instalados).
+// Si ningun host existe, NO se renderiza el boton.
 define([
     'local_adipaonboarding/runner'
 ], function(Runner) {
@@ -27,25 +30,28 @@ define([
         return btn;
     }
 
-    function buildTipWrap(payload) {
-        var wrap = document.createElement('div');
-        wrap.id = BUTTON_ID;
-        wrap.className = 'adipa-onboarding-trigger-wrap';
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'adipa-onboarding-trigger adipa-onboarding-trigger--icon';
-        btn.setAttribute('aria-label', payload.i18n.trigger);
-        btn.title = payload.i18n.trigger;
-        btn.textContent = '?';
-        btn.addEventListener('click', function() {
+    // Link sutil para mod_adipavideo: icono "?" inline + texto pequeño que se
+    // siente parte del flujo de apuntes, no un CTA dominante. Sin fondo/borde.
+    function buildSubtleLink(payload) {
+        var link = document.createElement('button');
+        link.id = BUTTON_ID;
+        link.type = 'button';
+        link.className = 'adipa-onboarding-trigger-link';
+        link.setAttribute('aria-label', payload.i18n.trigger);
+        link.title = payload.i18n.trigger;
+        var icon = document.createElement('span');
+        icon.className = 'adipa-onboarding-trigger-link__icon';
+        icon.textContent = '?';
+        icon.setAttribute('aria-hidden', 'true');
+        var text = document.createElement('span');
+        text.className = 'adipa-onboarding-trigger-link__text';
+        text.textContent = payload.i18n.trigger;
+        link.appendChild(icon);
+        link.appendChild(text);
+        link.addEventListener('click', function() {
             Runner.run(payload);
         });
-        wrap.appendChild(btn);
-        var text = document.createElement('span');
-        text.className = 'adipa-onboarding-trigger__tip-text';
-        text.textContent = payload.i18n.trigger;
-        wrap.appendChild(text);
-        return wrap;
+        return link;
     }
 
     function isVideoViewer(payload) {
@@ -57,9 +63,16 @@ define([
             return;
         }
         if (isVideoViewer(payload)) {
+            // Preferido: justo despues del Tip "haz click en cualquier chip..." dentro del panel apuntes.
+            var hintHost = document.querySelector('.adv-notes__help');
+            if (hintHost && hintHost.parentNode) {
+                hintHost.parentNode.insertBefore(buildSubtleLink(payload), hintHost.nextSibling);
+                return;
+            }
+            // Fallback: capsula sin panel apuntes (raro) — usar despues de tabs.
             var tabsHost = document.querySelector('.adv-tabs');
             if (tabsHost && tabsHost.parentNode) {
-                tabsHost.parentNode.insertBefore(buildTipWrap(payload), tabsHost.nextSibling);
+                tabsHost.parentNode.insertBefore(buildSubtleLink(payload), tabsHost.nextSibling);
             }
             return;
         }

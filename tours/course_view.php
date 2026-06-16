@@ -32,27 +32,29 @@ function local_adipaonboarding_course_view_steps_library(): array {
         [
             'step_key' => 'header', 'selector' => '.adipa-s0-banner',
             'title_lang_key' => 'step_header_title', 'body_lang_key' => 'step_header_body',
-            'placement' => 'bottom', 'responsive' => [],
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
         [
             'step_key' => 'view_toggle', 'selector' => '.adipa-view-toggle',
             'title_lang_key' => 'step_view_toggle_title', 'body_lang_key' => 'step_view_toggle_body',
-            'placement' => 'bottom', 'responsive' => [],
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
         [
             'step_key' => 'session_pill', 'selector' => '.adipa-s0-pill',
             'title_lang_key' => 'step_session_pill_title', 'body_lang_key' => 'step_session_pill_body',
-            'placement' => 'bottom', 'responsive' => [],
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
         [
             'step_key' => 'countdown', 'selector' => '.adipa-s0-clock',
             'title_lang_key' => 'step_countdown_title', 'body_lang_key' => 'step_countdown_body',
-            'placement' => 'bottom', 'responsive' => [],
+            // El banner colapsa a 1 columna en <700px y el reloj puede quedar oculto;
+            // si esta visible se muestra como bottom, sino el elementVisible lo skipea.
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
         [
             'step_key' => 'adipainfo_card', 'selector' => '.adipainfo-card',
             'title_lang_key' => 'step_adipainfo_title', 'body_lang_key' => 'step_adipainfo_body',
-            'placement' => 'top', 'responsive' => [],
+            'placement' => 'top', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
         [
             'step_key' => 'first_module', 'selector' => '.adipa-tile:first-of-type',
@@ -62,14 +64,14 @@ function local_adipaonboarding_course_view_steps_library(): array {
         [
             'step_key' => 'nid_row', 'selector' => '.adipanid-row',
             'title_lang_key' => 'step_nid_title', 'body_lang_key' => 'step_nid_body',
-            // 'auto': dejamos que Driver.js decida segun viewport — el row vive en
-            // top de pagina y dependiendo del scroll/contenido el mejor side varia.
-            'placement' => 'auto', 'responsive' => [],
+            // Bottom explicito + scroll-into-view en runner para no quedar entre
+            // menu y seccion. Mobile usa top para no taparse con el siguiente bloque.
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'top']],
         ],
         [
             'step_key' => 'certification', 'selector' => '.adipainfo-cert:not(.adipanid-row)',
             'title_lang_key' => 'step_certification_title', 'body_lang_key' => 'step_certification_body',
-            'placement' => 'top', 'responsive' => [],
+            'placement' => 'top', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
         // Step extra para acreditacion: tile de Documentacion (primer tile especial).
         [

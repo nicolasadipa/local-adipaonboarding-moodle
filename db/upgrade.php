@@ -237,5 +237,18 @@ function xmldb_local_adipaonboarding_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026061911, 'local', 'adipaonboarding');
     }
 
+    if ($oldversion < 2026061913) {
+        // v1.0.2: responsive overrides + nuevo placement nid_row + skip-on-mobile
+        // para video_sidebar/video_progress. Reseed para que los steps shipped
+        // reflejen los nuevos responsivejson y placements.
+        \local_adipaonboarding\local\tour\seeder::run();
+        upgrade_plugin_savepoint(true, 2026061913, 'local', 'adipaonboarding');
+    }
+
+    if ($oldversion < 2026061914) {
+        // v1.0.3: nada de schema — solo fix de runner/telemetry/CSS. Bump por bookkeeping.
+        upgrade_plugin_savepoint(true, 2026061914, 'local', 'adipaonboarding');
+    }
+
     return true;
 }

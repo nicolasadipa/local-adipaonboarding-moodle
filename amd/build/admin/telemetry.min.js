@@ -49,9 +49,14 @@ define([
         var header = document.createElement('h5');
         header.innerHTML = '<code>' + tour.tourid + '</code>';
         body.appendChild(header);
+        // Chart.js v4 con maintainAspectRatio:false necesita un contenedor con
+        // altura explicita. Sin wrap el canvas resuelve a 0px o explota al
+        // tamaño del cuerpo y deja el dashboard inutilizable.
+        var canvasWrap = document.createElement('div');
+        canvasWrap.className = 'adipa-chart-wrap';
         var canvas = document.createElement('canvas');
-        canvas.height = 80;
-        body.appendChild(canvas);
+        canvasWrap.appendChild(canvas);
+        body.appendChild(canvasWrap);
         card.appendChild(body);
         container.appendChild(card);
 
@@ -63,19 +68,30 @@ define([
                     label: 'Step views',
                     data: tour.values,
                     backgroundColor: '#704EFD',
-                    borderRadius: 6
+                    borderRadius: 6,
+                    maxBarThickness: 64
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {display: false}
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#091E42',
+                        titleColor: '#fff',
+                        bodyColor: '#fff'
+                    }
                 },
                 scales: {
+                    x: {
+                        ticks: {color: '#091E42', font: {size: 11}},
+                        grid: {display: false}
+                    },
                     y: {
                         beginAtZero: true,
-                        ticks: {precision: 0}
+                        ticks: {precision: 0, color: '#091E42'},
+                        grid: {color: 'rgba(9, 30, 66, 0.08)'}
                     }
                 }
             }

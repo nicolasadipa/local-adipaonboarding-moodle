@@ -20,13 +20,16 @@ class telemetry_repository {
      */
     public static function tour_summary(): array {
         global $DB;
+        // Usamos get_recordset_sql porque get_records_sql keyea por primer columna
+        // y aqui (tourid, action) puede tener filas con mismo tourid pero distinta
+        // action → la segunda fila se perderia silenciosamente.
         $sql = "SELECT tourid, action, COUNT(1) AS cnt
                   FROM {local_adipaonboarding_events}
                  WHERE stepid = :tourstep
               GROUP BY tourid, action";
-        $rows = $DB->get_records_sql($sql, ['tourstep' => '_tour']);
+        $rs = $DB->get_recordset_sql($sql, ['tourstep' => '_tour']);
         $summary = [];
-        foreach ($rows as $r) {
+        foreach ($rs as $r) {
             $key = $r->tourid;
             if (!isset($summary[$key])) {
                 $summary[$key] = ['tourid' => $key, 'completed' => 0, 'dismissed' => 0];
@@ -35,6 +38,7 @@ class telemetry_repository {
                 $summary[$key][$r->action] = (int)$r->cnt;
             }
         }
+        $rs->close();
         foreach ($summary as &$row) {
             $finished = $row['completed'] + $row['dismissed'];
             $row['finished'] = $finished;
@@ -69,17 +73,21 @@ class telemetry_repository {
      */
     public static function totals(): array {
         global $DB;
+        // Mismo motivo que tour_summary: action puede aparecer una vez por
+        // valor; aca no hay colision (action es unique) pero usamos recordset
+        // por consistencia.
         $sql = "SELECT action, COUNT(1) AS cnt
                   FROM {local_adipaonboarding_events}
                  WHERE stepid = :tourstep
               GROUP BY action";
-        $rows = $DB->get_records_sql($sql, ['tourstep' => '_tour']);
+        $rs = $DB->get_recordset_sql($sql, ['tourstep' => '_tour']);
         $totals = ['completed' => 0, 'dismissed' => 0];
-        foreach ($rows as $r) {
+        foreach ($rs as $r) {
             if (in_array($r->action, ['completed', 'dismissed'], true)) {
                 $totals[$r->action] = (int)$r->cnt;
             }
         }
+        $rs->close();
         $totals['finished'] = $totals['completed'] + $totals['dismissed'];
         $totals['completion_rate'] = $totals['finished'] > 0
             ? round($totals['completed'] / $totals['finished'] * 100, 1)

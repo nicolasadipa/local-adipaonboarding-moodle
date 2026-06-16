@@ -120,6 +120,39 @@ define([
         return step.placement || 'auto';
     }
 
+    // Steps que en mobile apuntan a elementos ocultos (sidebar off-canvas, progress
+    // bar del topbar `display:none`) se marcan con responsive.mobile.skip = true.
+    function shouldSkipOnMobile(step) {
+        return isMobileViewport() &&
+            step.responsive &&
+            step.responsive.mobile &&
+            step.responsive.mobile.skip === true;
+    }
+
+    // Scroll del target a viewport antes del highlight. Soluciona casos donde el
+    // popover se posiciona contra el borde superior porque el elemento esta fuera
+    // de pantalla (nid_row, certification, etc.). 'nearest' evita saltos bruscos.
+    function scrollIntoViewIfNeeded(selector) {
+        if (!selector || selector === 'modal') {
+            return;
+        }
+        try {
+            var el = document.querySelector(selector);
+            if (!el || typeof el.scrollIntoView !== 'function') {
+                return;
+            }
+            var rect = el.getBoundingClientRect();
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            // Si el elemento esta dentro del viewport con margen razonable, no movemos.
+            if (rect.top >= 80 && rect.bottom <= vh - 80) {
+                return;
+            }
+            el.scrollIntoView({behavior: 'auto', block: 'center', inline: 'nearest'});
+        } catch (e) {
+            // No critico: si el scroll falla, Driver.js intenta posicionar como puede.
+        }
+    }
+
     /**
      * Visible = en DOM + offsetParent != null + bounding rect > 0.
      * Targets 'modal' siempre se consideran visibles (popover centrado).
@@ -209,10 +242,14 @@ define([
     function buildDriverSteps(payload, isPreview) {
         var driverSteps = [];
         payload.steps.forEach(function(step) {
+            if (shouldSkipOnMobile(step)) {
+                return;
+            }
             if (!hasClickAction(step) && !elementVisible(step.element)) {
                 return;
             }
             var placement = resolvePlacement(step);
+            var stepElement = step.element;
             var driverStep = {
                 popover: {
                     title: step.title,
@@ -229,13 +266,14 @@ define([
                     }
                 },
                 onHighlightStarted: function() {
+                    scrollIntoViewIfNeeded(stepElement);
                     if (Array.isArray(step.actions) && step.actions.length > 0) {
                         runActions(step.actions);
                     }
                 }
             };
-            if (step.element && step.element !== 'modal') {
-                driverStep.element = step.element;
+            if (stepElement && stepElement !== 'modal') {
+                driverStep.element = stepElement;
             }
             driverSteps.push(driverStep);
         });
@@ -249,8 +287,11 @@ define([
         return driverSteps;
     }
 
-    function lockScroll()   { document.body.classList.add('adipa-tour-active'); }
-    function unlockScroll() { document.body.classList.remove('adipa-tour-active'); }
+    // Marker class para CSS hooks (no bloquea scroll: Driver.js disableActiveInteraction
+    // ya impide interaccion con el target; bloquear overflow rompe scrollIntoView en
+    // steps anchorados a elementos fuera del viewport — ver nid_row).
+    function markTourActive()   { document.body.classList.add('adipa-tour-active'); }
+    function unmarkTourActive() { document.body.classList.remove('adipa-tour-active'); }
 
     function runTour(payload, isPreview) {
         loadStyles();
@@ -260,7 +301,19 @@ define([
                 Log.debug('ningun step matcheo el DOM, no se muestra tour');
                 return;
             }
-            var completed = false;
+            // Marker robusto de completado: se setea cuando el ULTIMO step
+            // renderiza su popover (el learner llego al final). Mas confiable
+            // que d.hasNextStep() en onDestroyStarted — Driver.js v1 puede
+            // tener race conditions con activeStep dentro del callback.
+            var reachedLast = false;
+            var lastIdx = steps.length - 1;
+            var prevLastRender = steps[lastIdx].popover.onPopoverRender;
+            steps[lastIdx].popover.onPopoverRender = function() {
+                reachedLast = true;
+                if (typeof prevLastRender === 'function') {
+                    prevLastRender.apply(this, arguments);
+                }
+            };
             var d = driverFn({
                 showProgress: true,
                 progressText: payload.i18n.progress,
@@ -270,22 +323,16 @@ define([
                 prevBtnText: payload.i18n.prev,
                 doneBtnText: payload.i18n.done,
                 steps: steps,
-                onDestroyStarted: function() {
-                    if (!d.hasNextStep()) {
-                        completed = true;
-                    }
-                    d.destroy();
-                },
                 onDestroyed: function() {
-                    unlockScroll();
+                    unmarkTourActive();
                     if (isPreview) {
                         return;
                     }
-                    markSeen(payload, completed);
-                    logEvent(payload, '_tour', completed ? 'completed' : 'dismissed');
+                    markSeen(payload, reachedLast);
+                    logEvent(payload, '_tour', reachedLast ? 'completed' : 'dismissed');
                 }
             });
-            lockScroll();
+            markTourActive();
             d.drive();
         }).catch(function(err) {
             Log.debug('local_adipaonboarding: ' + err.message);
