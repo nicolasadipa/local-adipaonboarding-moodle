@@ -108,67 +108,73 @@ function local_adipaonboarding_course_view_tours(): array {
         'frequency'    => 'once_per_user',
     ];
 
+    // Estrategia progress_bar: incluimos AMBOS variants en todas las secuencias.
+    // El runner filtra por visibilidad — `format_adipa` solo renderea uno de los
+    // dos (date si mod_adipainfo tiene sesiones; completion si no). Asi cubrimos
+    // tanto sync courses configurados como sync courses temporalmente sin sesiones.
+
     // Secuencia para sync course_types (course, diploma, postitulo).
-    // progress_bar_date va despues del header (barra renderea justo abajo del banner).
     $syncsteps = [
-        'welcome', 'header', 'progress_bar_date', 'view_toggle', 'session_pill', 'countdown',
+        'welcome', 'header', 'progress_bar_date', 'progress_bar_completion',
+        'view_toggle', 'session_pill', 'countdown',
         'adipainfo_card', 'first_module',
         'nid_row', 'certification', 'closing',
     ];
 
     // Secuencia para async course_types (especializacion, magistral, asincronico).
     // Sin session_pill, countdown, certification (no aplican).
-    // progress_bar_completion: barra avanza por % de actividades completadas.
     $asyncsteps = [
-        'welcome', 'header', 'progress_bar_completion', 'view_toggle',
+        'welcome', 'header', 'progress_bar_date', 'progress_bar_completion',
+        'view_toggle',
         'adipainfo_card', 'first_module',
         'nid_row', 'closing',
     ];
 
     // Secuencia para acreditacion: sync + step Documentacion extra antes del primer modulo.
     $acreditacionsteps = [
-        'welcome', 'header', 'progress_bar_date', 'view_toggle', 'session_pill', 'countdown',
+        'welcome', 'header', 'progress_bar_date', 'progress_bar_completion',
+        'view_toggle', 'session_pill', 'countdown',
         'adipainfo_card', 'documentation_tile', 'first_module',
         'nid_row', 'certification', 'closing',
     ];
 
-    // v1.0.5: bump de version en TODOS los tours porque agregamos el step de
-    // barra de progreso a la secuencia. Bumpear fuerza re-show a usuarios que
-    // ya vieron la version anterior (storage::has_seen es per-version).
+    // v1.0.6: incluir ambas variantes de progress_bar (date+completion) en cada
+    // secuencia. format_adipa solo renderea una segun el course actual; el filtro
+    // de visibilidad del runner agarra la correcta. Bump de version para re-show.
     return [
         [
             'scope' => 'course_view', 'course_type' => 'course',
-            'version' => 7, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 8, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $syncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'diploma',
-            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 4, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $syncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'postitulo',
-            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 4, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $syncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'acreditacion',
-            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 4, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $acreditacionsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'especializacion',
-            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 4, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $asyncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'magistral',
-            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 4, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $asyncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'asincronico',
-            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 4, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $asyncsteps,
         ],
     ];

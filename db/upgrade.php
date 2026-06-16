@@ -262,5 +262,13 @@ function xmldb_local_adipaonboarding_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026061916, 'local', 'adipaonboarding');
     }
 
+    if ($oldversion < 2026061917) {
+        // v1.0.6: incluye ambos progress_bar variants en todas las secuencias
+        // (fallback para sync courses sin sesiones configuradas). Bump version
+        // de tour para forzar re-show del recorrido renovado.
+        \local_adipaonboarding\local\tour\seeder::run();
+        upgrade_plugin_savepoint(true, 2026061917, 'local', 'adipaonboarding');
+    }
+
     return true;
 }

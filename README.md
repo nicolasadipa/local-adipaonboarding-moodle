@@ -2,7 +2,7 @@
 
 **Tours guiados para estudiantes del aula ADIPA.** Plugin Moodle 4.x type `local` que muestra recorridos interactivos (Driver.js) la primera vez que un estudiante entra a un curso o al viewer de cápsulas de video. Pensado para que el alumno descubra las features del aula sin necesidad de que alguien le explique a mano.
 
-> **Estado**: v1.0.5 — **ALPHA estable**. Validado en staging + producción acotada. Apto para rollout gradual.
+> **Estado**: v1.0.6 — **ALPHA estable**. Validado en staging + producción acotada. Apto para rollout gradual.
 
 ---
 
@@ -277,6 +277,7 @@ El patch fuerza al bundle a tomar el branch global (`window.Sortable = e()`) en 
 
 | Versión | Fecha | Highlights |
 |---------|-------|------------|
+| **1.0.6** | 2026-06-16 | Fallback progress_bar: cada tour ahora incluye ambos variants (date+completion). El runner filtra por visibilidad y selecciona el que matchea según los datos del curso (sync courses sin sesiones configuradas → cae a completion mode, ahora cubierto). Bump version en todos los tours. |
 | **1.0.5** | 2026-06-16 | Nuevo step: barra de progreso del curso. Dos variantes según course_type: `progress_bar_date` (sync: course/diploma/postitulo/acreditacion — barra avanza por fechas) y `progress_bar_completion` (async: especializacion/magistral/asincronico — barra avanza por % de actividades). Bump version en todos los tours → re-show a usuarios que ya vieron el recorrido. |
 | **1.0.4** | 2026-06-16 | CSS-only: breakpoint del trigger (?) banner alineado al de format_adipa (700px en lugar de 575px) — entre 576–700px el banner colapsa pero el icono quedaba con tamaño desktop. |
 | **1.0.3** | 2026-06-16 | Trigger banner: 22×22 top-right (más sutil, ya no choca con caja sesiones). Telemetría: fix discrepancia cards vs tabla (era `get_records_sql` con keys colisionando — ahora `get_recordset_sql`). Runner: nueva señal de "completed" via `onPopoverRender` del último step (más confiable que `hasNextStep()`). +1 test PHPUnit corregido para multi-coursetype. |
