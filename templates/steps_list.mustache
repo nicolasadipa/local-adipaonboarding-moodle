@@ -1,0 +1,45 @@
+{{!
+    local_adipaonboarding/steps_list
+
+    Step Library: lista con CRUD.
+}}
+<div class="adipa-onboarding-admin">
+
+    <div class="d-flex align-items-center mb-3">
+        <a href="{{new_url}}" class="btn btn-primary">+ {{str.new_step}}</a>
+    </div>
+
+{{#empty}}
+    <div class="alert alert-info">{{str.empty_msg}}</div>
+{{/empty}}
+{{^empty}}
+    <table class="generaltable">
+        <thead>
+            <tr>
+                <th>{{str.col_key}}</th>
+                <th>{{str.col_title}}</th>
+                <th>{{str.col_selector}}</th>
+                <th>{{str.col_placement}}</th>
+                <th>{{str.col_actions}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#steps}}
+            <tr>
+                <td>
+                    <code>{{stepkey}}</code>
+                    {{#shipped}}<span class="badge badge-info ml-1" title="{{str.shipped_badge}}">S</span>{{/shipped}}
+                    {{^shipped}}<span class="badge badge-secondary ml-1" title="{{str.custom_badge}}">C</span>{{/shipped}}
+                    {{#dirty}}<span class="badge badge-warning ml-1" title="{{str.dirty_badge}}">●</span>{{/dirty}}
+                </td>
+                <td>{{resolved_title}}</td>
+                <td><code class="small">{{selector}}</code></td>
+                <td>{{placement}}</td>
+                <td><a href="{{edit_url}}" class="btn btn-sm btn-primary">{{str.action_edit}}</a></td>
+            </tr>
+        {{/steps}}
+        </tbody>
+    </table>
+{{/empty}}
+
+</div>

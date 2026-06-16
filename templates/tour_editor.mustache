@@ -1,0 +1,128 @@
+{{!
+    local_adipaonboarding/tour_editor
+
+    Editor drag-drop + override panel. Dos paneles con items de markup
+    identico (tour_editor_step partial). SortableJS solo mueve LI; CSS
+    decide visibilidad de botones override/remove segun el panel padre.
+}}
+<div class="adipa-onboarding-editor" data-tour-id="{{tour.id}}">
+
+    <div class="adipa-editor-toolbar mb-3">
+        <a href="{{back_url}}" class="btn btn-link">← {{str.back_btn}}</a>
+        <span class="ml-auto">
+            <span class="badge badge-light">v{{tour.version}}</span>
+            {{#tour.dirty}}<span class="badge badge-warning ml-1" title="{{str.dirty_warning}}">●</span>{{/tour.dirty}}
+        </span>
+    </div>
+
+    {{#tour.dirty}}
+    <div class="alert alert-info">{{str.dirty_warning}}</div>
+    {{/tour.dirty}}
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4>{{str.visibility_section}}</h4>
+            <div class="form-row">
+                <div class="form-group col-md-3 col-sm-6">
+                    <label>
+                        <input type="checkbox" id="adipa-tour-enabled" {{#tour.enabled}}checked{{/tour.enabled}}/>
+                        {{str.lbl_enabled}}
+                    </label>
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    <label for="adipa-delay-ms">{{str.lbl_delay}}</label>
+                    <input type="number" id="adipa-delay-ms" class="form-control" value="{{visibility.delay_ms}}" min="0" step="500"/>
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    <label for="adipa-min-viewport">{{str.lbl_min_viewport}}</label>
+                    <input type="number" id="adipa-min-viewport" class="form-control" value="{{visibility.min_viewport}}" min="0" step="10"/>
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    <label for="adipa-frequency">{{str.lbl_frequency}}</label>
+                    <select id="adipa-frequency" class="form-control">
+                        {{#freq_options}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/freq_options}}
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap" style="gap:.5rem;">
+                <button type="button" class="btn btn-primary" id="adipa-save-metadata">{{str.save_btn}}</button>
+                <button type="button" class="btn btn-outline-secondary" id="adipa-bump-version">{{str.bump_btn}}</button>
+                {{#tour.has_seed}}
+                <button type="button" class="btn btn-outline-danger ml-auto" id="adipa-reset-tour" data-confirm="{{str.confirm_reset}}">{{str.reset_btn}}</button>
+                {{/tour.has_seed}}
+            </div>
+
+            <hr/>
+
+            <div class="d-flex flex-wrap align-items-center" style="gap:.5rem;">
+                <label for="adipa-preview-course-id" class="mb-0 small">{{str.test_course_id_label}}</label>
+                <input type="number"
+                       id="adipa-preview-course-id"
+                       class="form-control form-control-sm"
+                       style="max-width:120px;"
+                       placeholder="ID"
+                       min="0"/>
+                <button type="button" class="btn btn-outline-info btn-sm" id="adipa-preview-tour">{{str.preview_btn}}</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="text-muted small">{{str.drag_hint}}</p>
+
+    <div class="row">
+        <div class="col-lg-7 mb-3">
+            <div class="card">
+                <div class="card-header"><strong>{{str.tour_steps_panel}}</strong></div>
+                <ul class="list-group list-group-flush adipa-step-panel adipa-tour-steps" id="adipa-tour-steps">
+                {{#tour_steps}}
+                    {{> local_adipaonboarding/tour_editor_step }}
+                {{/tour_steps}}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-5 mb-3">
+            <div class="card">
+                <div class="card-header"><strong>{{str.library_panel}}</strong></div>
+                <ul class="list-group list-group-flush adipa-step-panel adipa-library" id="adipa-library">
+                {{#library}}
+                    {{> local_adipaonboarding/tour_editor_step }}
+                {{/library}}
+                {{#library_empty}}
+                    <li class="list-group-item text-muted small adipa-library-empty">{{str.empty_library}}</li>
+                {{/library_empty}}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Modal override (oculto por defecto, controla amd/admin/tour_editor.js) --}}
+    <div class="adipa-override-modal" id="adipa-override-modal" hidden>
+        <div class="adipa-override-backdrop"></div>
+        <div class="adipa-override-dialog card">
+            <div class="card-header"><strong>{{str.override_modal_title}}</strong></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="adipa-override-selector">{{str.override_lbl_selector}}</label>
+                    <input type="text" id="adipa-override-selector" class="form-control" maxlength="512"/>
+                </div>
+                <div class="form-group">
+                    <label for="adipa-override-placement">{{str.override_lbl_placement}}</label>
+                    <select id="adipa-override-placement" class="form-control">
+                        <option value="">—</option>
+                        {{#placement_options}}
+                        <option value="{{value}}">{{label}}</option>
+                        {{/placement_options}}
+                    </select>
+                </div>
+                <div class="d-flex flex-wrap" style="gap:.5rem;">
+                    <button type="button" class="btn btn-primary" id="adipa-override-apply">{{str.override_apply}}</button>
+                    <button type="button" class="btn btn-outline-secondary" id="adipa-override-clear">{{str.override_clear}}</button>
+                    <button type="button" class="btn btn-link ml-auto" id="adipa-override-cancel">{{str.override_cancel}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

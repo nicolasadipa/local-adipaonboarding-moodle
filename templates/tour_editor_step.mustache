@@ -1,0 +1,27 @@
+{{!
+    local_adipaonboarding/tour_editor_step
+
+    Partial: un item de step (mismo markup en ambos paneles, visibilidad del
+    boton remove + boton override via CSS segun el panel padre).
+}}
+<li class="list-group-item adipa-step-item"
+    data-step-id="{{step_id}}"
+    data-step-key="{{stepkey}}"
+    data-tour-step-id="{{tour_step_id}}"
+    data-base-selector="{{selector}}"
+    data-base-placement="{{placement}}"
+    data-override-selector="{{override_selector}}"
+    data-override-placement="{{override_placement}}">
+    <div class="d-flex align-items-start">
+        <span class="adipa-step-handle mr-2" aria-hidden="true">⋮⋮</span>
+        <div class="flex-grow-1">
+            <strong>{{title}}</strong>
+            <div class="text-muted small">
+                <code>{{stepkey}}</code>{{#selector}} · {{selector}}{{/selector}}
+                {{#has_override}}<span class="badge badge-info ml-1">override</span>{{/has_override}}
+            </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-link adipa-step-override" title="Override">⚙</button>
+        <button type="button" class="btn btn-sm btn-link text-danger adipa-step-remove">×</button>
+    </div>
+</li>

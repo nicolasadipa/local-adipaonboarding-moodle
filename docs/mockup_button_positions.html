@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Posiciones del botón Tour — ADIPA</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Poppins', 'Helvetica', sans-serif;
+  background: #F3F4FF;
+  padding: 32px;
+  color: #091E42;
+}
+h1 { margin-bottom: 24px; font-size: 24px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.option {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(112,78,253,0.08);
+}
+.option h2 { font-size: 18px; color: #704EFD; margin-bottom: 8px; }
+.option p.desc { color: #5a6b85; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+.preview {
+  position: relative;
+  background: #F8F9FF;
+  border: 1px solid #EDE9FF;
+  border-radius: 12px;
+  height: 480px;
+  overflow: hidden;
+}
+
+/* Mock header */
+.mock-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #EDE9FF;
+  background: #fff;
+  gap: 16px;
+  font-size: 12px;
+}
+.mock-logo { font-weight: 800; color: #704EFD; letter-spacing: 2px; }
+.mock-nav { display: flex; gap: 14px; color: #091E42; font-weight: 500; }
+.mock-nav span { cursor: default; }
+.mock-nav-tour {
+  background: #F3F4FF;
+  border: 1px solid #704EFD;
+  color: #704EFD !important;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.mock-avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #704EFD, #2CB7FF);
+  margin-left: auto;
+}
+.mock-avatar-tour-icon {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #704EFD;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Mock content */
+.mock-banner {
+  background: linear-gradient(135deg, #704EFD, #5a3ec8);
+  color: #fff;
+  margin: 16px;
+  padding: 24px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.mock-banner small { display: block; font-weight: 400; opacity: .8; font-size: 11px; margin-top: 4px; }
+
+.mock-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 16px;
+}
+.mock-tile {
+  background: #fff;
+  border: 1px solid #EDE9FF;
+  padding: 16px;
+  border-radius: 8px;
+  height: 60px;
+  font-size: 11px;
+  color: #5a6b85;
+}
+
+/* Floating buttons (Plan B) */
+.float-btn {
+  position: absolute;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  border: 0;
+}
+.float-zendesk {
+  background: #2563EB;
+  color: #fff;
+  right: 16px;
+  bottom: 16px;
+}
+.float-zendesk::before { content: '💬'; }
+.float-accessibility {
+  background: #0072AA;
+  color: #fff;
+  width: 40px; height: 40px;
+  padding: 0;
+  justify-content: center;
+  right: 16px;
+  bottom: 68px;
+  font-size: 18px;
+}
+.float-accessibility::before { content: '♿'; }
+.float-tour-left {
+  background: #704EFD;
+  color: #fff;
+  left: 16px;
+  bottom: 16px;
+}
+.float-tour-left::before { content: '?'; background: #fff; color: #704EFD; width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; }
+
+/* Annotation labels */
+.label {
+  position: absolute;
+  background: #FFC728;
+  color: #091E42;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.label-arrow::after {
+  content: '';
+  position: absolute;
+  width: 0; height: 0;
+  border-style: solid;
+}
+.pro-con {
+  margin-top: 12px;
+  font-size: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.pro-con div { padding: 8px 10px; border-radius: 6px; }
+.pros { background: #E8F5E9; color: #1B5E20; }
+.cons { background: #FFEBEE; color: #B71C1C; }
+.pros::before { content: '✓ Pros\A'; white-space: pre; font-weight: 700; display: block; margin-bottom: 4px; }
+.cons::before { content: '✗ Contras\A'; white-space: pre; font-weight: 700; display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>🎯 Posiciones del botón Tour — ¿Cuál preferís?</h1>
+
+<div class="grid">
+
+  <!-- Plan A: Header -->
+  <div class="option">
+    <h2>Plan A — Tour en el header</h2>
+    <p class="desc">El botón "¿Cómo usar el aula?" vive en el navbar superior, junto al avatar. Bottom-right queda libre para Zendesk + Accesibilidad.</p>
+
+    <div class="preview">
+      <div class="mock-header">
+        <span class="mock-logo">ADIPA</span>
+        <div class="mock-nav">
+          <span>Mis cursos</span>
+          <span>Mis Certificados</span>
+          <span>Centro de ayuda</span>
+        </div>
+        <span class="mock-nav-tour">? ¿Cómo usar el aula?</span>
+        <div class="mock-avatar"></div>
+      </div>
+
+      <div class="mock-banner">
+        Curso: Gestión del Tiempo
+        <small>4 de 4 sesiones · próxima sáb 16 may</small>
+      </div>
+      <div class="mock-tiles">
+        <div class="mock-tile">Módulo 1</div>
+        <div class="mock-tile">Módulo 2</div>
+        <div class="mock-tile">Módulo 3</div>
+      </div>
+
+      <button class="float-btn float-zendesk">Ayuda</button>
+      <button class="float-btn float-accessibility" aria-label="Accesibilidad"></button>
+    </div>
+
+    <div class="pro-con">
+      <div class="pros">
+        Header limpio y consistente
+        Tour descubrible cuando lo busques
+        Libera bottom-right
+        No compite con widgets de soporte
+      </div>
+      <div class="cons">
+        Menos llamativo en el primer login
+        Requiere modificar el theme/header
+      </div>
+    </div>
+  </div>
+
+  <!-- Plan B: Bottom-left (actual) -->
+  <div class="option">
+    <h2>Plan B — Tour flotante bottom-left (actual)</h2>
+    <p class="desc">El tour está abajo a la izquierda. Zendesk + Accesibilidad apilados a la derecha. Tres botones flotantes en total.</p>
+
+    <div class="preview">
+      <div class="mock-header">
+        <span class="mock-logo">ADIPA</span>
+        <div class="mock-nav">
+          <span>Mis cursos</span>
+          <span>Mis Certificados</span>
+          <span>Centro de ayuda</span>
+        </div>
+        <div class="mock-avatar"></div>
+      </div>
+
+      <div class="mock-banner">
+        Curso: Gestión del Tiempo
+        <small>4 de 4 sesiones · próxima sáb 16 may</small>
+      </div>
+      <div class="mock-tiles">
+        <div class="mock-tile">Módulo 1</div>
+        <div class="mock-tile">Módulo 2</div>
+        <div class="mock-tile">Módulo 3</div>
+      </div>
+
+      <button class="float-btn float-tour-left">¿Cómo usar el aula?</button>
+      <button class="float-btn float-zendesk">Ayuda</button>
+      <button class="float-btn float-accessibility" aria-label="Accesibilidad"></button>
+    </div>
+
+    <div class="pro-con">
+      <div class="pros">
+        Muy visible y promoción del tour
+        Cero cambios en theme
+        Ya está implementado
+      </div>
+      <div class="cons">
+        Bottom-left "ensucia" la pantalla
+        El tour deja de ser relevante después
+        En mobile puede chocar con Moodle UI
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:32px;padding:16px;background:#fff;border-radius:12px;font-size:13px;">
+  <strong>Mi recomendación: Plan A</strong> — el tour es <em>discovery inicial</em>, no soporte continuo. Una vez que el estudiante lo vio, no compite por atención. Bottom-right queda limpio para los 2 botones que SÍ son perpetuos (chat + accesibilidad). En mobile especialmente, 3 botones flotantes saturan.
+</div>
+
+</body>
+</html>

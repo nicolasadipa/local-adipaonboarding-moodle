@@ -1,0 +1,118 @@
+{{!
+    local_adipaonboarding/step_editor
+
+    Form para crear o editar un step de la Step Library.
+    - Si is_new=true: stepkey editable, solo title/body text (sin lang key).
+    - Si shipped: stepkey readonly, muestra el lang key + permite override con text.
+    - Si custom: stepkey readonly, edita text directo.
+}}
+<div class="adipa-onboarding-admin">
+
+    <div class="adipa-editor-toolbar mb-3">
+        <a href="{{back_url}}" class="btn btn-link">← {{str.back_btn}}</a>
+        <span class="ml-auto">
+            {{#shipped}}<span class="badge badge-info">shipped</span>{{/shipped}}
+            {{#dirty}}<span class="badge badge-warning ml-1">●</span>{{/dirty}}
+        </span>
+    </div>
+
+    {{#shipped}}<div class="alert alert-info small">{{str.shipped_info}}</div>{{/shipped}}
+    {{^shipped}}{{^is_new}}<div class="alert alert-secondary small">{{str.custom_info}}</div>{{/is_new}}{{/shipped}}
+
+    <form id="adipa-step-form" class="card">
+        <div class="card-body">
+
+            <div class="form-group">
+                <label for="adipa-step-key">{{str.lbl_step_key}}</label>
+                <input type="text"
+                       id="adipa-step-key"
+                       class="form-control"
+                       value="{{stepkey}}"
+                       maxlength="64"
+                       {{^is_new}}readonly{{/is_new}}
+                       pattern="[a-zA-Z0-9_]+"/>
+                <small class="form-text text-muted">{{str.hint_step_key}}</small>
+            </div>
+
+            <div class="form-group">
+                <label for="adipa-selector">{{str.lbl_selector}}</label>
+                <input type="text"
+                       id="adipa-selector"
+                       class="form-control"
+                       value="{{selector}}"
+                       maxlength="512"
+                       required/>
+                <div class="d-flex flex-wrap mt-2" style="gap:.5rem;align-items:center;">
+                    <label for="adipa-test-course-id" class="mb-0 small">{{str.test_course_id_label}}</label>
+                    <input type="number"
+                           id="adipa-test-course-id"
+                           class="form-control form-control-sm"
+                           style="max-width:120px;"
+                           placeholder="ID"
+                           min="0"/>
+                    <button type="button" class="btn btn-outline-info btn-sm" id="adipa-test-selector">{{str.test_selector_btn}}</button>
+                    <small class="text-muted">{{str.test_selector_hint}}</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="adipa-title-text">{{str.lbl_title_text}}</label>
+                <input type="text"
+                       id="adipa-title-text"
+                       class="form-control"
+                       value="{{titletext}}"
+                       maxlength="255"/>
+                {{#titlelangkey}}<small class="form-text text-muted">{{str.hint_text_overrides_lang}}: <code>{{titlelangkey}}</code></small>{{/titlelangkey}}
+            </div>
+
+            <div class="form-group">
+                <label for="adipa-body-text">{{str.lbl_body_text}}</label>
+                <textarea id="adipa-body-text"
+                          class="form-control"
+                          rows="3">{{bodytext}}</textarea>
+                {{#bodylangkey}}<small class="form-text text-muted">{{str.hint_text_overrides_lang}}: <code>{{bodylangkey}}</code></small>{{/bodylangkey}}
+            </div>
+
+            <div class="form-group">
+                <label for="adipa-placement">{{str.lbl_placement}}</label>
+                <select id="adipa-placement" class="form-control">
+                    {{#placement_options}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/placement_options}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="adipa-actions">{{str.lbl_actions}}</label>
+                <textarea id="adipa-actions"
+                          class="form-control adipa-actions-input"
+                          rows="4"
+                          spellcheck="false"
+                          placeholder='[{"type":"click","selector":".adv-tab-btn[data-tab=&quot;apuntes&quot;]"},{"type":"wait","ms":200}]'>{{actionsjson}}</textarea>
+                <small class="form-text text-muted">{{{str.hint_actions}}}</small>
+                <div id="adipa-actions-error" class="text-danger small mt-1" style="display:none;"></div>
+            </div>
+
+            {{^is_new}}
+            <div class="adipa-step-preview p-3 mb-3 rounded" style="background:#F3F4FF;">
+                <div class="text-muted small mb-1">{{str.preview_title}}</div>
+                <strong>{{resolved_title}}</strong>
+                <div class="text-muted small mt-2 mb-1">{{str.preview_body}}</div>
+                <div>{{{resolved_body}}}</div>
+            </div>
+            {{/is_new}}
+
+            <div class="d-flex" style="gap:.5rem;">
+                <button type="button" class="btn btn-primary" id="adipa-save-step">{{str.save_btn}}</button>
+                {{^is_new}}
+                    {{#has_seed}}
+                    <button type="button" class="btn btn-outline-secondary" id="adipa-reset-step" data-confirm="{{str.confirm_reset}}">{{str.reset_btn}}</button>
+                    {{/has_seed}}
+                    <button type="button" class="btn btn-outline-danger ml-auto" id="adipa-delete-step" data-confirm="{{str.confirm_delete}}">{{str.delete_btn}}</button>
+                {{/is_new}}
+            </div>
+
+        </div>
+    </form>
+
+</div>

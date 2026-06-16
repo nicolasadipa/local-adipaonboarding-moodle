@@ -1,0 +1,85 @@
+{{!
+    local_adipaonboarding/telemetry
+
+    Dashboard: totales (cards), tabla por tour, drop-off charts (uno por tour).
+}}
+<div class="adipa-onboarding-admin adipa-telemetry">
+
+    {{#total_events}}
+    <div class="d-flex flex-wrap align-items-center mb-3" style="gap:.5rem;">
+        <a href="{{reset_url}}"
+           class="btn btn-outline-danger btn-sm ml-auto"
+           onclick="return confirm('{{str.confirm_reset}}');">{{str.reset_btn}}</a>
+        <small class="text-muted w-100">{{str.reset_hint}}</small>
+    </div>
+    {{/total_events}}
+
+    <h3>{{str.overview_title}}</h3>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="adipa-stat-value">{{totals.completed}}</div>
+                    <div class="adipa-stat-label">{{str.card_completed}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="adipa-stat-value">{{totals.dismissed}}</div>
+                    <div class="adipa-stat-label">{{str.card_dismissed}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="adipa-stat-value">{{totals.finished}}</div>
+                    <div class="adipa-stat-label">{{str.card_finished}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="adipa-stat-value">{{totals.completion_rate}}%</div>
+                    <div class="adipa-stat-label">{{str.card_completion}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>{{str.tours_table_title}}</h3>
+    {{#tours_empty}}
+        <div class="alert alert-info">{{str.empty_msg}}</div>
+    {{/tours_empty}}
+    {{^tours_empty}}
+        <table class="generaltable mb-4">
+            <thead>
+                <tr>
+                    <th>{{str.col_tourid}}</th>
+                    <th class="text-right">{{str.col_finished}}</th>
+                    <th class="text-right">{{str.col_completed}}</th>
+                    <th class="text-right">{{str.col_dismissed}}</th>
+                    <th class="text-right">{{str.col_rate}}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{#tours}}
+                <tr>
+                    <td><code>{{tourid}}</code></td>
+                    <td class="text-right">{{finished}}</td>
+                    <td class="text-right">{{completed}}</td>
+                    <td class="text-right">{{dismissed}}</td>
+                    <td class="text-right"><strong>{{completion_rate}}%</strong></td>
+                </tr>
+            {{/tours}}
+            </tbody>
+        </table>
+
+        <h3>{{str.dropoff_title}}</h3>
+        <div id="adipa-dropoff-container"></div>
+    {{/tours_empty}}
+
+</div>

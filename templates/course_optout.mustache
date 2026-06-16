@@ -1,0 +1,30 @@
+{{!
+    local_adipaonboarding/course_optout
+
+    Per-course opt-out: toggle simple para desactivar el tour en este curso.
+}}
+<div class="adipa-onboarding-admin adipa-course-optout">
+
+    <p>{{str.description}}</p>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <label class="adipa-toggle mr-3">
+                    <input type="checkbox"
+                           id="adipa-course-optout-toggle"
+                           {{#optout}}checked{{/optout}}/>
+                    <span class="adipa-toggle-track" aria-hidden="true"></span>
+                </label>
+                <div>
+                    <strong>{{str.lbl_toggle}}</strong>
+                    <div class="text-muted small" id="adipa-course-optout-hint">
+                        {{#optout}}{{str.hint_on}}{{/optout}}
+                        {{^optout}}{{str.hint_off}}{{/optout}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

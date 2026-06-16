@@ -1,0 +1,484 @@
+/* local_adipaonboarding — branding ADIPA + responsive.
+ * Tokens del Manual de marca ADIPA:
+ *   purple #704EFD, cyan #2CB7FF, grey-bg #F3F4FF, navy #091E42
+ *
+ * Breakpoints: mobile < 576px, tablet 576-991, desktop ≥ 992.
+ * Touch target minimo: 44x44 (Apple HIG / WCAG 2.5.5).
+ */
+
+/* === Trigger "?" — UN solo estilo: icono circular === */
+.adipa-onboarding-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 0 8px;
+    padding: 0;
+    background: rgba(112, 78, 253, 0.06);
+    color: #704EFD;
+    border: 1.5px solid #704EFD;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+    flex-shrink: 0;
+    transition: background 120ms ease, transform 120ms ease;
+}
+.adipa-onboarding-trigger:hover {
+    background: rgba(112, 78, 253, 0.18);
+    transform: translateY(-1px);
+}
+.adipa-onboarding-trigger:focus-visible {
+    outline: 3px solid #2CB7FF;
+    outline-offset: 2px;
+}
+
+/* Tooltip CSS puro (usa aria-label). */
+.adipa-onboarding-trigger--icon::after {
+    content: attr(aria-label);
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #091E42;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms ease;
+    z-index: 1050;
+}
+.adipa-onboarding-trigger--icon:hover::after,
+.adipa-onboarding-trigger--icon:focus-visible::after {
+    opacity: 1;
+}
+
+/* === Wrap "tip" para mod_adipavideo (icono + texto al costado) === */
+.adipa-onboarding-trigger-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0;
+    padding: 12px 16px;
+    background: rgba(112, 78, 253, 0.06);
+    border: 1px solid rgba(112, 78, 253, 0.18);
+    border-radius: 12px;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    font-size: 13px;
+    color: #091E42;
+}
+.adipa-onboarding-trigger-wrap .adipa-onboarding-trigger {
+    margin: 0;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+}
+.adipa-onboarding-trigger-wrap .adipa-onboarding-trigger::after {
+    display: none; /* tooltip redundante cuando ya hay texto al lado */
+}
+.adipa-onboarding-trigger__tip-text {
+    font-weight: 500;
+}
+
+@media (max-width: 575px) {
+    .adipa-onboarding-trigger {
+        width: 32px;
+        height: 32px;
+        margin: 0 4px;
+        font-size: 14px;
+    }
+    .adipa-onboarding-trigger-wrap {
+        font-size: 12px;
+        padding: 10px 12px;
+        gap: 8px;
+    }
+}
+
+/* Lock body scroll mientras corre el tour. */
+body.adipa-tour-active {
+    overflow: hidden !important;
+}
+
+/* === Driver.js popover (branding ADIPA) === */
+.driver-popover {
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    border-radius: 16px;
+    border: 1px solid #F3F4FF;
+    box-shadow: 0 12px 40px rgba(9, 30, 66, 0.18);
+    max-width: 420px;
+}
+.driver-popover-title {
+    color: #091E42;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.3;
+}
+.driver-popover-description {
+    color: #091E42;
+    line-height: 1.5;
+    font-size: 14px;
+}
+.driver-popover-progress-text {
+    color: #704EFD;
+    font-weight: 600;
+    font-size: 12px;
+}
+.driver-popover-footer button {
+    border-radius: 999px;
+    padding: 10px 20px;
+    min-height: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: inherit;
+}
+.driver-popover-next-btn {
+    background: #704EFD !important;
+    color: #fff !important;
+    text-shadow: none !important;
+    border: 0 !important;
+}
+.driver-popover-prev-btn {
+    background: transparent !important;
+    color: #704EFD !important;
+    border: 1px solid #704EFD !important;
+    text-shadow: none !important;
+}
+.driver-popover-close-btn {
+    color: #091E42 !important;
+    background: transparent !important;
+    border: 0 !important;
+    min-width: 44px;
+    min-height: 44px;
+}
+.driver-overlay {
+    fill: rgba(9, 30, 66, 0.55) !important;
+}
+
+@media (max-width: 575px) {
+    .driver-popover { max-width: calc(100vw - 24px); }
+    .driver-popover-title { font-size: 16px; }
+    .driver-popover-description { font-size: 13px; }
+}
+@media (min-width: 576px) and (max-width: 991px) {
+    .driver-popover { max-width: 380px; }
+}
+
+/* === Admin UI === */
+.adipa-onboarding-admin .adipa-toggle {
+    display: inline-flex;
+    width: 44px;
+    height: 24px;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    padding: 10px 0;
+    box-sizing: content-box;
+}
+.adipa-onboarding-admin .adipa-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+.adipa-onboarding-admin .adipa-toggle-track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #DFD5FF;
+    border-radius: 999px;
+    transition: background 120ms ease;
+}
+.adipa-onboarding-admin .adipa-toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 120ms ease;
+    box-shadow: 0 1px 3px rgba(9, 30, 66, 0.18);
+}
+.adipa-onboarding-admin .adipa-toggle input:checked ~ .adipa-toggle-track {
+    background: #704EFD;
+}
+.adipa-onboarding-admin .adipa-toggle input:checked ~ .adipa-toggle-track::after {
+    transform: translateX(20px);
+}
+.adipa-onboarding-admin .adipa-toggle input:focus-visible ~ .adipa-toggle-track {
+    outline: 3px solid #2CB7FF;
+    outline-offset: 2px;
+}
+
+.adipa-onboarding-admin .generaltable,
+.adipa-onboarding-admin .table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.adipa-onboarding-admin .generaltable code {
+    word-break: break-all;
+}
+
+/* === Tour editor (drag-drop) === */
+.adipa-onboarding-editor .adipa-step-item {
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+}
+.adipa-onboarding-editor .adipa-step-item:active {
+    cursor: grabbing;
+}
+.adipa-onboarding-editor .adipa-step-handle {
+    color: #704EFD;
+    font-weight: 700;
+    letter-spacing: -2px;
+    cursor: grab;
+    flex-shrink: 0;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+}
+.adipa-onboarding-editor .adipa-library .adipa-step-remove,
+.adipa-onboarding-editor .adipa-library .adipa-step-override {
+    display: none;
+}
+.adipa-onboarding-editor .adipa-step-remove,
+.adipa-onboarding-editor .adipa-step-override {
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.adipa-onboarding-editor .sortable-ghost {
+    background: #F3F4FF !important;
+    opacity: 0.7;
+}
+.adipa-onboarding-editor .sortable-drag {
+    box-shadow: 0 8px 24px rgba(112, 78, 253, 0.32);
+}
+.adipa-onboarding-editor .adipa-step-panel {
+    min-height: 60px;
+}
+.adipa-onboarding-editor .adipa-editor-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+/* === Override modal === */
+.adipa-override-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+}
+.adipa-override-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(9, 30, 66, 0.5);
+}
+.adipa-override-dialog {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    z-index: 1;
+    margin: auto;
+}
+
+/* === Step editor === */
+.adipa-onboarding-admin .adipa-step-preview {
+    background: #F3F4FF;
+    border-left: 3px solid #704EFD;
+    padding: 12px 16px;
+    border-radius: 6px;
+}
+.adipa-onboarding-admin input[type="text"],
+.adipa-onboarding-admin input[type="number"],
+.adipa-onboarding-admin textarea,
+.adipa-onboarding-admin select {
+    font-size: 16px;
+    min-height: 44px;
+}
+.adipa-onboarding-admin textarea {
+    min-height: 88px;
+}
+.adipa-onboarding-admin .form-control:focus-visible {
+    outline: 3px solid #2CB7FF;
+    outline-offset: 1px;
+    border-color: #704EFD;
+}
+.adipa-onboarding-admin .btn:focus-visible {
+    outline: 3px solid #2CB7FF;
+    outline-offset: 2px;
+}
+
+/* === Telemetry dashboard === */
+.adipa-telemetry .adipa-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #704EFD;
+    line-height: 1.1;
+}
+.adipa-telemetry .adipa-stat-label {
+    font-size: .85rem;
+    color: #091E42;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* === Selector tester (admin testing live) === */
+.adipa-selector-tester-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    background: #704EFD;
+    color: #fff;
+    padding: 12px 16px;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 16px rgba(112, 78, 253, 0.32);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.adipa-selector-tester-banner code {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #fff;
+    word-break: break-all;
+}
+.adipa-selector-tester-banner.error {
+    background: #F61710;
+}
+.adipa-selector-tester-banner .adipa-selector-tester-close {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    min-height: 44px;
+    font-weight: 600;
+}
+.adipa-selector-tester-match {
+    outline: 3px dashed #FF017C !important;
+    outline-offset: 2px !important;
+    position: relative !important;
+}
+.adipa-selector-tester-match::before {
+    content: 'match #' attr(data-adipa-match-index);
+    position: absolute;
+    top: -12px;
+    left: -6px;
+    background: #FF017C;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    z-index: 99998;
+    pointer-events: none;
+}
+body.adipa-selector-tester-active {
+    padding-top: 64px;
+}
+
+/* === Preview banner === */
+.adipa-preview-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    background: #FFC728;
+    color: #091E42;
+    padding: 12px 16px;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 16px rgba(9, 30, 66, 0.2);
+    text-align: center;
+}
+body.adipa-preview-active {
+    padding-top: 48px;
+}
+
+/* === Course opt-out === */
+.adipa-course-optout .card {
+    max-width: 600px;
+}
+
+/* === Responsive ajustes === */
+@media (max-width: 575px) {
+    .adipa-telemetry .adipa-stat-value { font-size: 1.5rem; }
+    .adipa-onboarding-editor .adipa-step-item .d-flex { flex-wrap: wrap; gap: 4px; }
+    .adipa-override-dialog { max-width: 100%; }
+    .adipa-selector-tester-banner { font-size: 13px; padding: 10px 12px; }
+    body.adipa-selector-tester-active { padding-top: 80px; }
+    .adipa-onboarding-editor .adipa-editor-toolbar .btn { flex: 1 1 auto; min-width: 0; }
+    .adipa-onboarding-admin .adipa-step-preview { padding: 10px 12px; }
+}
+@media (min-width: 576px) and (max-width: 991px) {
+    .adipa-telemetry .adipa-stat-value { font-size: 1.75rem; }
+}
+
+/* === Reduced motion === */
+@media (prefers-reduced-motion: reduce) {
+    .adipa-onboarding-trigger,
+    .adipa-onboarding-admin .adipa-toggle-track,
+    .adipa-onboarding-admin .adipa-toggle-track::after,
+    .adipa-onboarding-editor .sortable-ghost {
+        transition: none !important;
+    }
+    .adipa-onboarding-trigger:hover {
+        transform: none;
+    }
+}
+
+/* === Print: ocultar tour UI === */
+@media print {
+    .adipa-onboarding-trigger,
+    .adipa-onboarding-trigger-wrap,
+    .driver-popover,
+    .driver-overlay,
+    .adipa-selector-tester-banner,
+    .adipa-preview-banner {
+        display: none !important;
+    }
+    .adipa-selector-tester-match { outline: none !important; }
+    .adipa-selector-tester-match::before { display: none !important; }
+    body.adipa-selector-tester-active,
+    body.adipa-preview-active { padding-top: 0 !important; }
+}

@@ -1,0 +1,50 @@
+{{!
+    local_adipaonboarding/tours_list
+
+    Lista de tours por (scope, course_type, version) con toggle enabled
+    inline + link a editor drag-drop.
+
+    Context variables: tours[], empty (bool), sesskey, str{}
+}}
+<div class="adipa-onboarding-admin">
+{{#empty}}
+    <div class="alert alert-info">{{str.empty_msg}}</div>
+{{/empty}}
+{{^empty}}
+    <table class="generaltable" id="adipa-tours-table">
+        <thead>
+            <tr>
+                <th>{{str.col_scope}}</th>
+                <th>{{str.col_coursetype}}</th>
+                <th>{{str.col_steps}}</th>
+                <th>{{str.col_version}}</th>
+                <th>{{str.col_enabled}}</th>
+                <th>{{str.col_actions}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#tours}}
+            <tr data-tour-id="{{id}}">
+                <td><code>{{scope}}</code></td>
+                <td><code>{{coursetype}}</code> {{#dirty}}<span class="badge badge-warning ml-1" title="{{str.dirty_badge}}">●</span>{{/dirty}}</td>
+                <td>{{stepcount}}</td>
+                <td>v{{version}}</td>
+                <td>
+                    <label class="adipa-toggle">
+                        <input type="checkbox"
+                               class="adipa-tour-toggle"
+                               data-tour-id="{{id}}"
+                               {{#enabled}}checked{{/enabled}}
+                               aria-label="{{#enabled}}{{str.on}}{{/enabled}}{{^enabled}}{{str.off}}{{/enabled}}"/>
+                        <span class="adipa-toggle-track" aria-hidden="true"></span>
+                    </label>
+                </td>
+                <td>
+                    <a href="{{edit_url}}" class="btn btn-sm btn-primary">{{str.action_edit}}</a>
+                </td>
+            </tr>
+        {{/tours}}
+        </tbody>
+    </table>
+{{/empty}}
+</div>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/adipaonboarding/db" VERSION="20260616" COMMENT="Tablas Onboarding ADIPA: steps (libreria reusable, soporta lang_key + text directo) + tours (composicion por scope/course_type) + tsteps (junction con overrides) + seen + events + optout (opt-out por curso).">
+  <TABLES>
+    <TABLE NAME="local_adipaonboarding_steps" COMMENT="Step Library: ladrillos reusables. Lang keys para shipped, text directo para steps custom del admin.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="stepkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="selector" TYPE="char" LENGTH="512" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="titlelangkey" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" COMMENT="Para steps shipped. NULL si custom (usa titletext)."/>
+        <FIELD NAME="bodylangkey" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="titletext" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Para steps custom (admin). Si presente, gana sobre titlelangkey."/>
+        <FIELD NAME="bodytext" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="actionsjson" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON array de pre-actions a ejecutar antes del popover. Forma: [{type:&#34;click&#34;,selector:&#34;...&#34;}, {type:&#34;wait&#34;,ms:300}]."/>
+        <FIELD NAME="placement" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="auto" SEQUENCE="false"/>
+        <FIELD NAME="responsivejson" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="shipped" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="dirty" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="createdat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="updatedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="stepkey_unique" UNIQUE="true" FIELDS="stepkey"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_adipaonboarding_tours" COMMENT="Tour = composicion ordenada de steps por (scope, course_type, version).">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="scope" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="coursetype" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="visibilityjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="shipped" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="dirty" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="createdat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="updatedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="scope_coursetype" UNIQUE="false" FIELDS="scope, coursetype"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_adipaonboarding_tsteps" COMMENT="Junction: secuencia ordenada de steps con overrides opcionales.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="tourid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="overridejson" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="tourid_fk" TYPE="foreign" FIELDS="tourid" REFTABLE="local_adipaonboarding_tours" REFFIELDS="id"/>
+        <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="local_adipaonboarding_steps" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tour_sort" UNIQUE="true" FIELDS="tourid, sortorder"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_adipaonboarding_seen" COMMENT="Recorridos ya vistos por usuario, versionados.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tourid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tourversion" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="completed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="seenat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_tour_version" UNIQUE="true" FIELDS="userid, tourid, tourversion"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_adipaonboarding_events" COMMENT="Telemetria: step viewed/skipped/completed/dismissed.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tourid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tourversion" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="stepid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="createdat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tour_action" UNIQUE="false" FIELDS="tourid, action"/>
+        <INDEX NAME="user_created" UNIQUE="false" FIELDS="userid, createdat"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_adipaonboarding_optout" COMMENT="Opt-out per-course: si el curso esta en esta tabla con optout=1, no se muestra tour a sus estudiantes.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="optout" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="updatedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="updatedat" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid_fk_unique" TYPE="foreign-unique" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

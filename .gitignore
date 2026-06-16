@@ -1,0 +1,19 @@
+# macOS metadata (rompen install en Docker Linux si se cuelan en el ZIP).
+.DS_Store
+._*
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.zip
+*.tgz
+*.tar
+*.tar.gz
+
+# Logs
+*.log
