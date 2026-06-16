@@ -21,6 +21,13 @@ $string['step_session_pill_title'] = 'Your next live session';
 $string['step_session_pill_body'] = 'See how many sessions you have completed and when the next one is. We built this view so you never lose track of your program.';
 $string['step_countdown_title'] = 'Real-time countdown';
 $string['step_countdown_body'] = 'The clock updates itself, in your timezone. Technology built to accompany you minute by minute until your next session.';
+// Progress bar: two modes depending on course_type. Sync programs (course/diploma/postitulo/
+// acreditacion) advance by dates (start→end); async programs (especializacion/magistral/
+// asincronico) advance by % of activities completed.
+$string['step_progress_date_title'] = 'Your progress by dates';
+$string['step_progress_date_body']  = 'This bar shows how much of the program has elapsed since it started. Hover over ⓘ for the full date detail.';
+$string['step_progress_completion_title'] = 'Your progress by activities';
+$string['step_progress_completion_body']  = 'This bar grows as you mark activities as completed. Hover over ⓘ for more detail.';
 $string['step_first_module_title'] = 'Start here';
 $string['step_first_module_body'] = 'Each card is a module of your program. Move at your pace: our system tracks your progress so you always know where to pick up.';
 $string['step_certification_title'] = 'Your achievement, secured';

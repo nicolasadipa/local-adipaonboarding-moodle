@@ -21,6 +21,12 @@ $string['step_session_pill_title'] = 'Tu próxima sesión en vivo';
 $string['step_session_pill_body'] = 'Aquí ves cuántas sesiones llevas completadas y cuándo es la siguiente. Pensamos esta vista para que nunca pierdas el ritmo de tu programa.';
 $string['step_countdown_title'] = 'Cuenta regresiva en tiempo real';
 $string['step_countdown_body'] = 'El reloj se actualiza solo, en tu zona horaria. Es tecnología pensada para acompañarte minuto a minuto hasta tu próxima sesión.';
+// Progress bar: dos modos según course_type. Sync avanza por fechas (inicio→fin);
+// async avanza por % de actividades completadas.
+$string['step_progress_date_title'] = 'Tu avance por fechas';
+$string['step_progress_date_body']  = 'Esta barra muestra cuánto del programa ya transcurrió desde su inicio. Pasa el cursor sobre ⓘ para ver el detalle de las fechas.';
+$string['step_progress_completion_title'] = 'Tu avance por actividades';
+$string['step_progress_completion_body']  = 'Esta barra crece a medida que marcas las actividades como completadas. Pasa el cursor sobre ⓘ para ver más detalle.';
 $string['step_first_module_title'] = 'Empieza por aquí';
 $string['step_first_module_body'] = 'Cada tarjeta es un módulo de tu programa. Avanza a tu ritmo: nuestro sistema registra tu progreso para que siempre sepas por dónde retomar.';
 $string['step_certification_title'] = 'Tu logro, asegurado';

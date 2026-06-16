@@ -255,5 +255,12 @@ function xmldb_local_adipaonboarding_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026061915, 'local', 'adipaonboarding');
     }
 
+    if ($oldversion < 2026061916) {
+        // v1.0.5: agrega progress_bar_date (sync) y progress_bar_completion (async)
+        // a la Step Library + a las secuencias de tour. Bumpea version de cada tour.
+        \local_adipaonboarding\local\tour\seeder::run();
+        upgrade_plugin_savepoint(true, 2026061916, 'local', 'adipaonboarding');
+    }
+
     return true;
 }

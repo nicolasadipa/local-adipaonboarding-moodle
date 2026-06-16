@@ -34,6 +34,20 @@ function local_adipaonboarding_course_view_steps_library(): array {
             'title_lang_key' => 'step_header_title', 'body_lang_key' => 'step_header_body',
             'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
         ],
+        // Barra de progreso: dos variantes segun course_type.
+        // Sync (course/diploma/postitulo/acreditacion) → date mode (avanza por fechas).
+        // Async (especializacion/magistral/asincronico) → completion mode (avanza por % actividades).
+        // El selector matchea la clase que format_adipa::render_progress_header emite.
+        [
+            'step_key' => 'progress_bar_date', 'selector' => '.adipa-progress-pill.adipa-progress-date',
+            'title_lang_key' => 'step_progress_date_title', 'body_lang_key' => 'step_progress_date_body',
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
+        ],
+        [
+            'step_key' => 'progress_bar_completion', 'selector' => '.adipa-progress-pill.adipa-progress-completion',
+            'title_lang_key' => 'step_progress_completion_title', 'body_lang_key' => 'step_progress_completion_body',
+            'placement' => 'bottom', 'responsive' => ['mobile' => ['placement' => 'bottom']],
+        ],
         [
             'step_key' => 'view_toggle', 'selector' => '.adipa-view-toggle',
             'title_lang_key' => 'step_view_toggle_title', 'body_lang_key' => 'step_view_toggle_body',
@@ -95,61 +109,66 @@ function local_adipaonboarding_course_view_tours(): array {
     ];
 
     // Secuencia para sync course_types (course, diploma, postitulo).
+    // progress_bar_date va despues del header (barra renderea justo abajo del banner).
     $syncsteps = [
-        'welcome', 'header', 'view_toggle', 'session_pill', 'countdown',
+        'welcome', 'header', 'progress_bar_date', 'view_toggle', 'session_pill', 'countdown',
         'adipainfo_card', 'first_module',
         'nid_row', 'certification', 'closing',
     ];
 
     // Secuencia para async course_types (especializacion, magistral, asincronico).
     // Sin session_pill, countdown, certification (no aplican).
+    // progress_bar_completion: barra avanza por % de actividades completadas.
     $asyncsteps = [
-        'welcome', 'header', 'view_toggle',
+        'welcome', 'header', 'progress_bar_completion', 'view_toggle',
         'adipainfo_card', 'first_module',
         'nid_row', 'closing',
     ];
 
     // Secuencia para acreditacion: sync + step Documentacion extra antes del primer modulo.
     $acreditacionsteps = [
-        'welcome', 'header', 'view_toggle', 'session_pill', 'countdown',
+        'welcome', 'header', 'progress_bar_date', 'view_toggle', 'session_pill', 'countdown',
         'adipainfo_card', 'documentation_tile', 'first_module',
         'nid_row', 'certification', 'closing',
     ];
 
+    // v1.0.5: bump de version en TODOS los tours porque agregamos el step de
+    // barra de progreso a la secuencia. Bumpear fuerza re-show a usuarios que
+    // ya vieron la version anterior (storage::has_seen es per-version).
     return [
         [
             'scope' => 'course_view', 'course_type' => 'course',
-            'version' => 6, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 7, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $syncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'diploma',
-            'version' => 2, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $syncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'postitulo',
-            'version' => 2, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $syncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'acreditacion',
-            'version' => 2, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $acreditacionsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'especializacion',
-            'version' => 2, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $asyncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'magistral',
-            'version' => 2, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $asyncsteps,
         ],
         [
             'scope' => 'course_view', 'course_type' => 'asincronico',
-            'version' => 2, 'enabled' => true, 'visibility' => $visibility,
+            'version' => 3, 'enabled' => true, 'visibility' => $visibility,
             'step_keys' => $asyncsteps,
         ],
     ];
